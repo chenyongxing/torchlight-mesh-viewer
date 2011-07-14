@@ -1,0 +1,5 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <StartArguments>D:\stuff\Torchlight_modding\org_models\Vanquisher\Vanquisher.MESH</StartArguments>
+  </PropertyGroup>
+</Project>
