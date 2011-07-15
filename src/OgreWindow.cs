@@ -237,36 +237,36 @@ namespace Mogre.Demo.MogreForm
                 if (needsReload) matPtr.Reload();
             }
 
-            string[] allWadrobe = new string[] { "boots", "chest", "helm", "gloves", "shoulder" };
+            //string[] allWadrobe = new string[] { "boots", "chest", "helm", "gloves", "shoulder" };
 
-            // 2nd pass
-            // check for material wardrobe textures
-            if (ModelEntity.GetMesh().NumSubMeshes > 0)
-            {
-                foreach (var subMesh in ModelEntity.GetMesh().GetSubMeshIterator())
-                {
-                    bool needsReload = false;
-                    var matPtr = (MaterialPtr)MaterialManager.Singleton.GetByName(subMesh.MaterialName);
-                    foreach (var mtrPass in matPtr.GetTechnique(0).GetPassIterator())
-                    {
-                        foreach (var mtrTex in mtrPass.GetTextureUnitStateIterator())
-                        {
-                            foreach (var wardrobe in allWadrobe)
-                            {
-                                if (subMesh.MaterialName.IndexOf(wardrobe, StringComparison.OrdinalIgnoreCase) >= 0)
-                                {
-                                    var fl = Directory.GetFiles(modelDir, string.Format("*{0}*", wardrobe));
-                                    // get the first that matches
-                                    if (fl.Length > 0)
-                                        mtrTex.SetTextureName(Path.GetFileName(fl[0]));
-                                    needsReload = true;
-                                }
-                            }
-                        }
-                    }
-                    if (needsReload) matPtr.Reload();
-                }
-            }
+            //// 2nd pass
+            //// check for material wardrobe textures
+            //if (ModelEntity.GetMesh().NumSubMeshes > 0)
+            //{
+            //    foreach (var subMesh in ModelEntity.GetMesh().GetSubMeshIterator())
+            //    {
+            //        bool needsReload = false;
+            //        var matPtr = (MaterialPtr)MaterialManager.Singleton.GetByName(subMesh.MaterialName);
+            //        foreach (var mtrPass in matPtr.GetTechnique(0).GetPassIterator())
+            //        {
+            //            foreach (var mtrTex in mtrPass.GetTextureUnitStateIterator())
+            //            {
+            //                foreach (var wardrobe in allWadrobe)
+            //                {
+            //                    if (subMesh.MaterialName.IndexOf(wardrobe, StringComparison.OrdinalIgnoreCase) >= 0)
+            //                    {
+            //                        var fl = Directory.GetFiles(modelDir, string.Format("*{0}*", wardrobe));
+            //                        // get the first that matches
+            //                        if (fl.Length > 0)
+            //                            mtrTex.SetTextureName(Path.GetFileName(fl[0]));
+            //                        needsReload = true;
+            //                    }
+            //                }
+            //            }
+            //        }
+            //        if (needsReload) matPtr.Reload();
+            //    }
+            //}
             // check for skeleton and animations
             if (ModelEntity.HasSkeleton)
             {
