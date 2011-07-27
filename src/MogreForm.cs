@@ -129,23 +129,30 @@ namespace Mogre.Demo.MogreForm
 
         private void SetMeshModel(string theMesh)
         {
-            myCurrentModel = theMesh;
-            var anims = mogreWin.SetViewModel(theMesh);
-            inputHandler.ModelPosition = mogreWin.ModelCenterPosition;
-
-            this.Text = string.Format("{0} {1} ({2})", AsmInfo.Title, AsmInfo.Version, theMesh);
-
-            if (anims.Count > 0)
+            try
             {
-                listBoxAnimations.Visible = true;
-                buttonPlayStop.Visible = true;
-                trackBarAnimPosition.Visible = true;
+                myCurrentModel = theMesh;
+                var anims = mogreWin.SetViewModel(theMesh);
+                inputHandler.ModelPosition = mogreWin.ModelCenterPosition;
 
-                listBoxAnimations.Items.Clear();
-                foreach (var an in anims)
+                this.Text = string.Format("{0} {1} ({2})", AsmInfo.Title, AsmInfo.Version, theMesh);
+
+                if (anims.Count > 0)
                 {
-                    listBoxAnimations.Items.Add(an);
+                    listBoxAnimations.Visible = true;
+                    buttonPlayStop.Visible = true;
+                    trackBarAnimPosition.Visible = true;
+
+                    listBoxAnimations.Items.Clear();
+                    foreach (var an in anims)
+                    {
+                        listBoxAnimations.Items.Add(an);
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(string.Format("Exception: {0} \nCheck Ogre.log for details.", e.Message), "Error viewing model", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
                 

@@ -223,14 +223,17 @@ namespace Mogre.Demo.MogreForm
             {
                 bool needsReload = false;
                 var matPtr = (MaterialPtr)MaterialManager.Singleton.GetByName(subMesh.MaterialName);
-                foreach (var mtrPass in matPtr.GetTechnique(0).GetPassIterator())
+                if (matPtr != null)
                 {
-                    foreach (var mtrTex in mtrPass.GetTextureUnitStateIterator())
+                    foreach (var mtrPass in matPtr.GetTechnique(0).GetPassIterator())
                     {
-                        if (mtrTex.IsTextureLoadFailing)
+                        foreach (var mtrTex in mtrPass.GetTextureUnitStateIterator())
                         {
-                            mtrTex.SetTextureName(mtrTex.TextureName.Replace(".png", ".dds"));
-                            needsReload = true;
+                            if (mtrTex.IsTextureLoadFailing)
+                            {
+                                mtrTex.SetTextureName(mtrTex.TextureName.Replace(".png", ".dds"));
+                                needsReload = true;
+                            }
                         }
                     }
                 }
