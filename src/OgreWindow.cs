@@ -10,6 +10,16 @@ using System.IO;
 
 namespace Mogre.Demo.MogreForm
 {
+    public enum Wardrobe : int
+    {
+        Face = 0,
+        Boots = 1,
+        Chest = 2,
+        Gloves = 3,
+        Helmet = 4,
+        Shoulders = 5       
+    };
+
     public class OgreWindow
     {
         public Root root;
@@ -26,6 +36,9 @@ namespace Mogre.Demo.MogreForm
 
         const string MODEL_NODE = "modelView";
 
+        public bool IsWardrobed { get; private set; }
+        public string[] WardrobeTextures = new string[Enum.GetValues(typeof(Wardrobe)).Length];
+
         public bool AutoRotateModel { get; set; }
         public float AutoRotateSpeed { get; set; }
         public bool Animate { get; set; }
@@ -35,6 +48,7 @@ namespace Mogre.Demo.MogreForm
 
         public Vector3 ModelCenterPosition { get; private set; }
 
+      
         private bool HasModelEntity
         {
             get
@@ -50,9 +64,6 @@ namespace Mogre.Demo.MogreForm
                 return (ModelSceneNode != null);
             }
         }
-
-
-
 
         public OgreWindow(Point origin, Size theWindowSize, IntPtr hWnd)
         {
@@ -192,6 +203,44 @@ namespace Mogre.Demo.MogreForm
             mainGrid.AttachObject(CreateGrid(sceneMgr, 30f, 1f, "main"));
         }
 
+        public void SetWardrobeTexture(Wardrobe thePieceType, string theTexture)
+        {
+            if (string.Compare(theTexture, "none", true) == 0 ||
+                string.IsNullOrEmpty(theTexture)) return;
+
+            // gather information about wardrobe
+            if (ModelEntity.GetMesh().NumSubMeshes > 0)
+            {
+                bool needsReload = false;
+                foreach (var subMesh in ModelEntity.GetMesh().GetSubMeshIterator())
+                {
+                    var matPtr = (MaterialPtr)MaterialManager.Singleton.GetByName(subMesh.MaterialName);
+
+                    string suitStr = thePieceType.ToString();
+                    if (subMesh.MaterialName.IndexOf(suitStr, StringComparison.OrdinalIgnoreCase) >= 0)
+                    {                    
+                        foreach (var mtrPass in matPtr.GetTechnique(0).GetPassIterator())
+                        {
+                            mtrPass.RemoveAllTextureUnitStates();
+
+                            TextureUnitState baseTex = new TextureUnitState(mtrPass, WardrobeTextures[(int)Wardrobe.Face]);
+
+                            TextureUnitState wardTex = new TextureUnitState(mtrPass, theTexture);
+                            wardTex.SetColourOperation(LayerBlendOperation.LBO_ALPHA_BLEND);
+                            needsReload = true;
+                            mtrPass.AddTextureUnitState(baseTex);
+                            mtrPass.AddTextureUnitState(wardTex);
+                          
+                        }
+
+                        WardrobeTextures[(int)thePieceType] = theTexture;
+                        break;
+                    }
+                    if (needsReload) matPtr.Reload();
+                }                
+            }
+        }
+
         public List<string> SetViewModel(string theModel)
         {
             string nameOnly = Path.GetFileNameWithoutExtension(theModel);
@@ -239,9 +288,42 @@ namespace Mogre.Demo.MogreForm
                 }
                 if (needsReload) matPtr.Reload();
             }
+                        
+            // gather information about wardrobe
+            IsWardrobed = false;
+            WardrobeTextures = new string[Enum.GetValues(typeof(Wardrobe)).Length];
 
-            //string[] allWadrobe = new string[] { "boots", "chest", "helm", "gloves", "shoulder" };
+            if (ModelEntity.GetMesh().NumSubMeshes > 0)
+            {
+                foreach (var subMesh in ModelEntity.GetMesh().GetSubMeshIterator())
+                {                    
+                    var matPtr = (MaterialPtr)MaterialManager.Singleton.GetByName(subMesh.MaterialName);
 
+                    foreach (Wardrobe suit in Enum.GetValues(typeof(Wardrobe)))
+                    {
+                        string suitStr = suit.ToString();
+                        if (subMesh.MaterialName.IndexOf(suitStr, StringComparison.OrdinalIgnoreCase) >= 0)
+                        {
+                            IsWardrobed = true;
+                            string wardrobeTex = "none";
+                            foreach (var mtrPass in matPtr.GetTechnique(0).GetPassIterator())
+                            {
+                                foreach (var mtrTex in mtrPass.GetTextureUnitStateIterator())
+                                {
+                                    if (!string.IsNullOrEmpty(mtrTex.TextureName))
+                                    {
+                                        wardrobeTex = mtrTex.TextureName;
+                                    }
+                                }
+                            }
+
+                            WardrobeTextures[(int)suit] = wardrobeTex;                            
+                            break;
+                        }
+                    }                  
+                }
+            }
+            
             //// 2nd pass
             //// check for material wardrobe textures
             //if (ModelEntity.GetMesh().NumSubMeshes > 0)

@@ -149,11 +149,33 @@ namespace Mogre.Demo.MogreForm
                         listBoxAnimations.Items.Add(an);
                     }
                 }
+                
+                ReloadWardrobe();
+                
             }
             catch (Exception e)
             {
                 MessageBox.Show(string.Format("Exception: {0} \nCheck Ogre.log for details.", e.Message), "Error viewing model", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void CheckWardrobe()
+        {
+                        
+            foreach (Wardrobe suit in Enum.GetValues(typeof(Wardrobe)))
+            {
+                foreach (var it in wardrobeToolStripMenuItem.DropDownItems)
+                {
+                    string suitStr = suit.ToString();
+                    var toolItem = (ToolStripItem)it;
+                    if (toolItem.Text.IndexOf(suitStr, StringComparison.OrdinalIgnoreCase) >= 0)
+                    {
+                        toolItem.Text = string.Format("{0}({1})...", suitStr,
+                            Path.GetFileName(mogreWin.WardrobeTextures[(int)suit]));
+                    }
+                }
+            }
+            
         }
                 
         private void MogreForm_DragEnter(object sender, DragEventArgs e)
@@ -289,7 +311,86 @@ namespace Mogre.Demo.MogreForm
                 mogreWin.camera.Direction = oldDir;
                 mogreWin.camera.Position = oldPos;
             }
-        }                   
+        }
+
+        private string GetTextureDialog()
+        {
+            // Displays an OpenFileDialog so the user can select a image.
+            OpenFileDialog openFileDialog1 = new OpenFileDialog();
+            openFileDialog1.Filter = "Texture file (*.png)|*.png|Texture file (*.dds)|*.dds|All files (*.*)|*.*";
+            openFileDialog1.Title = "Select a texture";
+            openFileDialog1.RestoreDirectory = true;
+            openFileDialog1.Multiselect = false;
+
+            // Show the Dialog.            
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                return openFileDialog1.FileName;
+            }
+            else return string.Empty;
+        }
+
+        private void faceBodyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            mogreWin.SetWardrobeTexture(Wardrobe.Face, GetTextureDialog());
+            CheckWardrobe();
+        }
+
+        private void bootsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            mogreWin.SetWardrobeTexture(Wardrobe.Boots, GetTextureDialog());
+            CheckWardrobe();
+        }
+
+        private void chestToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            mogreWin.SetWardrobeTexture(Wardrobe.Chest, GetTextureDialog());
+            CheckWardrobe();
+        }
+
+        private void glovesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            mogreWin.SetWardrobeTexture(Wardrobe.Gloves, GetTextureDialog());
+            CheckWardrobe();
+        }
+
+        private void helmToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            mogreWin.SetWardrobeTexture(Wardrobe.Helmet, GetTextureDialog());
+            CheckWardrobe();
+        }
+
+        private void shouldersToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            mogreWin.SetWardrobeTexture(Wardrobe.Shoulders, GetTextureDialog());
+            CheckWardrobe();
+        }
+
+        void ReloadWardrobe()
+        {
+            if (mogreWin.IsWardrobed)
+            {
+                wardrobeToolStripMenuItem.Enabled = true;
+
+                mogreWin.SetWardrobeTexture(Wardrobe.Boots, mogreWin.WardrobeTextures[(int)Wardrobe.Boots]);
+                mogreWin.SetWardrobeTexture(Wardrobe.Chest, mogreWin.WardrobeTextures[(int)Wardrobe.Chest]);
+                mogreWin.SetWardrobeTexture(Wardrobe.Face, mogreWin.WardrobeTextures[(int)Wardrobe.Face]);
+                mogreWin.SetWardrobeTexture(Wardrobe.Gloves, mogreWin.WardrobeTextures[(int)Wardrobe.Gloves]);
+                mogreWin.SetWardrobeTexture(Wardrobe.Helmet, mogreWin.WardrobeTextures[(int)Wardrobe.Helmet]);
+                mogreWin.SetWardrobeTexture(Wardrobe.Shoulders, mogreWin.WardrobeTextures[(int)Wardrobe.Shoulders]);
+
+                CheckWardrobe();
+            }            
+            else
+            {
+                wardrobeToolStripMenuItem.Enabled = false;
+            }
+        }
+
+        private void reloadAllToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ReloadWardrobe();
+        }          
     }
 }
 
