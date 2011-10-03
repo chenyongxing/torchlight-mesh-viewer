@@ -296,7 +296,7 @@ namespace Mogre.Demo.MogreForm
 
         private void MogreForm_Resize(object sender, EventArgs e)
         {
-            mogreWin.Resize(mogrePanel.Width, mogrePanel.Height);
+            if (mogreWin != null) mogreWin.Resize(mogrePanel.Width, mogrePanel.Height);
         }
 
         private void buttonReload_Click(object sender, EventArgs e)
@@ -333,7 +333,7 @@ namespace Mogre.Demo.MogreForm
         private void faceBodyToolStripMenuItem_Click(object sender, EventArgs e)
         {
             mogreWin.SetWardrobeTexture(Wardrobe.Face, GetTextureDialog());
-            CheckWardrobe();
+            ReloadWardrobe(); // face, body is all the stuff that should be alphaed
         }
 
         private void bootsToolStripMenuItem_Click(object sender, EventArgs e)

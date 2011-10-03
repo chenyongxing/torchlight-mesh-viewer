@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace Mogre.Demo.MogreForm
 {
@@ -26,13 +27,30 @@ namespace Mogre.Demo.MogreForm
                 Application.Run(new MogreForm(passedModel));
                 //Application.DoEvents();
             }
-            catch (System.Runtime.InteropServices.SEHException)
+            catch (Exception ex)
+                
             {
-                if (OgreException.IsThrown)
-                    MessageBox.Show(OgreException.LastException.FullDescription,
-                                    "An Ogre exception has occurred!");
+                if (ex is System.Runtime.InteropServices.SEHException)
+                {
+                    if (OgreException.IsThrown)
+                        MessageBox.Show(OgreException.LastException.FullDescription,
+                                        "An Ogre exception has occurred!");
+                    else
+                        throw;
+                }
                 else
-                    throw;
+                {
+                    string SourceName = "WindowsService.ExceptionLog";
+                    if (!EventLog.SourceExists(SourceName))
+                    {
+                        EventLog.CreateEventSource(SourceName, "Application");
+                    }
+
+                    EventLog eventLog = new EventLog();
+                    eventLog.Source = SourceName;
+                    string message = string.Format("Exception: {0} \n\nStack: {1}", ex.Message, ex.StackTrace);
+                    eventLog.WriteEntry(message, EventLogEntryType.Error);            
+                }
             } 
         }
     }

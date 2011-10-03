@@ -37,7 +37,7 @@ namespace Mogre.Demo.MogreForm
         const string MODEL_NODE = "modelView";
 
         public bool IsWardrobed { get; private set; }
-        public string[] WardrobeTextures = new string[Enum.GetValues(typeof(Wardrobe)).Length];
+        public string[] WardrobeTextures = null;
 
         public bool AutoRotateModel { get; set; }
         public float AutoRotateSpeed { get; set; }
@@ -67,6 +67,8 @@ namespace Mogre.Demo.MogreForm
 
         public OgreWindow(Point origin, Size theWindowSize, IntPtr hWnd)
         {
+            IsWardrobed = false;
+            WardrobeTextures = new string[Enum.GetValues(typeof(Wardrobe)).Length];
             position = origin;
             windowSize = theWindowSize;
             this.hWnd = hWnd;
