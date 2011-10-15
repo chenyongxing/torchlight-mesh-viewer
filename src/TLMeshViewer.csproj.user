@@ -1,8 +1,8 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <StartArguments>D:\stuff\Torchlight_modding\org_models\Vanq_ViewerTest\vanquisher_gunslinger_set.MESH</StartArguments>
+    <StartArguments>D:\stuff\Torchlight_modding\TorchED2\media\models\chest_rare\chest_rare.MESH</StartArguments>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-    <StartArguments>D:\stuff\Torchlight_modding\TorchED2\media\wardrobe\vanquisher\vanquisher_gunslinger_set.MESH</StartArguments>
+    <StartArguments>D:\stuff\Torchlight_modding\TorchED2\media\models\chest_standard\chest_standard.MESH</StartArguments>
   </PropertyGroup>
 </Project>

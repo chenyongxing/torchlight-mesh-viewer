@@ -222,15 +222,18 @@ namespace Mogre.Demo.MogreForm
                     if (subMesh.MaterialName.IndexOf(suitStr, StringComparison.OrdinalIgnoreCase) >= 0)
                     {                    
                         foreach (var mtrPass in matPtr.GetTechnique(0).GetPassIterator())
-                        {
+                        {                            
                             mtrPass.RemoveAllTextureUnitStates();
 
-                            TextureUnitState baseTex = new TextureUnitState(mtrPass, WardrobeTextures[(int)Wardrobe.Face]);
-
+                            TextureUnitState baseTex = null;
+                            if (WardrobeTextures[(int)Wardrobe.Face] != null)
+                            {
+                                baseTex = new TextureUnitState(mtrPass, WardrobeTextures[(int)Wardrobe.Face]);
+                            }
                             TextureUnitState wardTex = new TextureUnitState(mtrPass, theTexture);
                             wardTex.SetColourOperation(LayerBlendOperation.LBO_ALPHA_BLEND);
                             needsReload = true;
-                            mtrPass.AddTextureUnitState(baseTex);
+                            if (baseTex!=null) mtrPass.AddTextureUnitState(baseTex);
                             mtrPass.AddTextureUnitState(wardTex);
                           
                         }
