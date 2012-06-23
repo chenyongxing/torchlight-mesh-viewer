@@ -48,7 +48,9 @@ namespace Mogre.Demo.MogreForm
 
         public Vector3 ModelCenterPosition { get; private set; }
 
-      
+
+        SceneNode mainGrid;
+
         private bool HasModelEntity
         {
             get
@@ -186,6 +188,7 @@ namespace Mogre.Demo.MogreForm
                 string.Format("{0} x {1} @ 32-bit colour", theWidht, theHeight));
         }
 
+        
         public void Reset()
         {
             if (HasModelSceneNode)
@@ -200,7 +203,7 @@ namespace Mogre.Demo.MogreForm
 
         public void SetGrid()
         {
-            SceneNode mainGrid = sceneMgr.RootSceneNode.CreateChildSceneNode("mainGrid_node");
+            mainGrid = sceneMgr.RootSceneNode.CreateChildSceneNode("mainGrid_node");
             mainGrid.SetPosition(0, -0.05f, 0);
             mainGrid.AttachObject(CreateGrid(sceneMgr, 30f, 1f, "main"));
         }
@@ -209,7 +212,7 @@ namespace Mogre.Demo.MogreForm
         {
             if (string.Compare(theTexture, "none", true) == 0 ||
                 string.IsNullOrEmpty(theTexture)) return;
-
+            
             // gather information about wardrobe
             if (ModelEntity.GetMesh().NumSubMeshes > 0)
             {
@@ -521,6 +524,22 @@ namespace Mogre.Demo.MogreForm
                 root.Dispose();
                 root = null;
             }
+        }
+
+        public string TakeScreenshot(string theFolderPath)
+        {
+            if (HasModelEntity)
+            {
+                mainGrid.FlipVisibility();
+                root.RenderOneFrame();
+                //string fileToWrite = ModelEntity.Name + ".jpg";
+                //string path = Path.Combine(theFolderPath, fileToWrite);
+                viewport.Target.WriteContentsToFile(theFolderPath);
+                mainGrid.FlipVisibility();
+                return theFolderPath;
+            }
+            else
+                return null;
         }
 
         void AddResourcesDirectory(string theTileSet, string thePath)

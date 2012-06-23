@@ -5,4 +5,19 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <StartArguments>D:\stuff\Torchlight_modding\TorchED2\media\models\chest_standard\chest_standard.MESH</StartArguments>
   </PropertyGroup>
+  <PropertyGroup>
+    <PublishUrlHistory>publish\</PublishUrlHistory>
+    <InstallUrlHistory>
+    </InstallUrlHistory>
+    <SupportUrlHistory>
+    </SupportUrlHistory>
+    <UpdateUrlHistory>
+    </UpdateUrlHistory>
+    <BootstrapperUrlHistory>
+    </BootstrapperUrlHistory>
+    <ErrorReportUrlHistory>
+    </ErrorReportUrlHistory>
+    <FallbackCulture>en-US</FallbackCulture>
+    <VerifyUploadedFiles>false</VerifyUploadedFiles>
+  </PropertyGroup>
 </Project>
