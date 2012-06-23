@@ -128,6 +128,10 @@ namespace Mogre.Demo.MogreForm
                     this.mTranslate.x = 0f;
                     return;
 
+                case Keys.T:
+                    (parentForm as MogreForm).TakeScreenshot();
+                    break;
+
                 default:
                     return;
             }

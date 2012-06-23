@@ -394,12 +394,17 @@ namespace Mogre.Demo.MogreForm
 
         private void saveScreenshotToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            TakeScreenshot();
+        }
+
+        public void TakeScreenshot()
+        {
             string res = null;
             menuStrip1.Hide();
             if (!string.IsNullOrEmpty(myCurrentModel))
             {
                 string nameNoExt = Path.GetFileNameWithoutExtension(myCurrentModel);
-                nameNoExt += ".jpg";
+                nameNoExt += "_thumbnail.jpg";
                 res = mogreWin.TakeScreenshot(Path.Combine(Path.GetDirectoryName(myCurrentModel), nameNoExt));
                 //if (res != null)
                 //    MessageBox.Show(string.Format("Screenshot saved to {0}.", res), "Screenshot saved");
