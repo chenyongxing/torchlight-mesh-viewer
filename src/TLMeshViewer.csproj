@@ -72,6 +72,7 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="Mogre_d, Version=1.7.1.0, Culture=neutral, processorArchitecture=x86" Condition="'$(Configuration)'=='Debug'">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>dependencies\Debug\Mogre.dll</HintPath>
@@ -94,7 +95,14 @@
       <DependentUpon>AboutInfo.cs</DependentUpon>
     </Compile>
     <Compile Include="AsmInfo.cs" />
+    <Compile Include="Browser.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Browser.Designer.cs">
+      <DependentUpon>Browser.cs</DependentUpon>
+    </Compile>
     <Compile Include="CustomInputHandler.cs" />
+    <Compile Include="FileExplorer.cs" />
     <Compile Include="MogreForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -106,6 +114,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="AboutInfo.resx">
       <DependentUpon>AboutInfo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Browser.resx">
+      <DependentUpon>Browser.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MogreForm.resx">
       <SubType>Designer</SubType>

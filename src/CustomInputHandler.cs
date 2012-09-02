@@ -28,6 +28,7 @@ namespace Mogre.Demo.MogreForm
         public Camera cameraRef;
 
         public Vector3 ModelPosition;
+        public bool WasCameraChangedByUser { get; set; }
                
         public CustomInputHandler(Control win, Control parent, Camera theCamera)
         {
@@ -47,6 +48,7 @@ namespace Mogre.Demo.MogreForm
             this.mTimer.Tick += new EventHandler(this.Timer_Tick);
 
             ModelPosition = new Vector3(0, 0, 0);
+            WasCameraChangedByUser = false;
         }
 
         protected virtual void HandleKeyDown(object sender, KeyEventArgs e)
@@ -57,6 +59,7 @@ namespace Mogre.Demo.MogreForm
                 case Keys.Q:
                 case Keys.Prior:
                     this.mTranslate.y = mTrans;
+                    WasCameraChangedByUser = true;
                     return;
                                     
                 case Keys.R:
@@ -69,26 +72,31 @@ namespace Mogre.Demo.MogreForm
                 case Keys.S:
                 case Keys.Down:
                     this.mTranslate.z = mTrans;
+                    WasCameraChangedByUser = true;
                     return;
 
                 case Keys.W:
                 case Keys.Up:
                     this.mTranslate.z = -mTrans;
+                    WasCameraChangedByUser = true;
                     return;
 
                 case Keys.Next:
                 case Keys.E:
                     this.mTranslate.y = -mTrans;
+                    WasCameraChangedByUser = true;
                     return;//break;
 
                 case Keys.Left:
                 case Keys.A:
                     this.mTranslate.x = -mTrans;
+                    WasCameraChangedByUser = true;
                     return;
 
                 case Keys.Right:
                 case Keys.D:
                     this.mTranslate.x = mTrans;
+                    WasCameraChangedByUser = true;
                     return;
 
                 default:
@@ -158,6 +166,8 @@ namespace Mogre.Demo.MogreForm
         {
             var normVec = cameraRef.Direction.NormalisedCopy;
             cameraRef.Position = cameraRef.Position + normVec * e.Delta * mSlide * mScroll;
+
+            WasCameraChangedByUser = true;
         }
 
         private void HandleMouseMove(Point delta)
@@ -166,12 +176,14 @@ namespace Mogre.Demo.MogreForm
             {                
                 cameraRef.Yaw(new Degree(delta.X * this.mRot));
                 cameraRef.Pitch(new Degree(delta.Y * this.mRot));
+                WasCameraChangedByUser = true;
             }
             if (this.mSliding)
             {               
 
                 Vector3 v = cameraRef.Orientation * ((Vector3.UNIT_Y * delta.Y) + (Vector3.UNIT_X * -delta.X));
                 cameraRef.Move(new Vector3(v.x * mSlide, v.y * mSlide, v.z * mSlide));
+                WasCameraChangedByUser = true;
             }
             if (this.mOrbiting)
             {
@@ -189,7 +201,8 @@ namespace Mogre.Demo.MogreForm
                 cameraRef.Position *= result.ToRotationMatrix();                
 
                 cameraRef.LookAt(ModelPosition);
-            }
+                WasCameraChangedByUser = true;
+            }            
         }
              
         protected virtual void HandleMouseUp(object sender, MouseEventArgs e)

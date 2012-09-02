@@ -18,6 +18,8 @@ namespace Mogre.Demo.MogreForm
         string myCurrentModel;
         bool myIsPlaying = false;
 
+        Browser myBrowser = null;
+
         // Keep track of the message filter
         private RedirectMessageFilter myMessageFilterKeyUp = null;
         private RedirectMessageFilter myMessageFilterKeyDown = null;
@@ -26,6 +28,7 @@ namespace Mogre.Demo.MogreForm
         public MogreForm(string theMesh)
         {
             InitializeComponent();
+            myBrowser = new Browser(this);
             this.Disposed += new EventHandler(MogreForm_Disposed);
 
             Directory.SetCurrentDirectory(Application.StartupPath);
@@ -56,7 +59,7 @@ namespace Mogre.Demo.MogreForm
             mogreWin.SetGrid();
             if (!string.IsNullOrEmpty(theMesh))
             {
-                SetMeshModel(theMesh);
+                SetMeshModel(theMesh, false);
             }
         }
 
@@ -122,15 +125,18 @@ namespace Mogre.Demo.MogreForm
             // Show the Dialog.            
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                SetMeshModel(openFileDialog1.FileName);                
+                SetMeshModel(openFileDialog1.FileName, false);                
             }
             this.Refresh();
         }
 
-        private void SetMeshModel(string theMesh)
+        public void SetMeshModel(string theMesh, bool theKeepCameraPosition)
         {
             try
             {
+                var oldDir = mogreWin.camera.Direction;
+                var oldPos = mogreWin.camera.Position;                
+
                 myCurrentModel = theMesh;
                 var anims = mogreWin.SetViewModel(theMesh);
                 inputHandler.ModelPosition = mogreWin.ModelCenterPosition;
@@ -151,7 +157,15 @@ namespace Mogre.Demo.MogreForm
                 }
                 
                 ReloadWardrobe();
-                
+
+                if (theKeepCameraPosition && inputHandler.WasCameraChangedByUser)
+                {
+                    mogreWin.camera.Direction = oldDir;
+                    mogreWin.camera.Position = oldPos;
+                }
+
+                if (theMesh != myBrowser.SelectedModel && myBrowser.Visible)
+                    myBrowser.SelectNodeForPath(theMesh);
             }
             catch (Exception e)
             {
@@ -193,7 +207,7 @@ namespace Mogre.Demo.MogreForm
                         
             if (fileList.Length > 0)
             {
-                SetMeshModel(fileList[0]);
+                SetMeshModel(fileList[0], false);
             }
         }
 
@@ -219,6 +233,7 @@ namespace Mogre.Demo.MogreForm
         private void buttonReset_Click(object sender, EventArgs e)
         {            
             mogreWin.Reset();
+            inputHandler.WasCameraChangedByUser = false;
         }
 
         private void buttonPlayStop_Click(object sender, EventArgs e)
@@ -303,13 +318,7 @@ namespace Mogre.Demo.MogreForm
         {
             if (!string.IsNullOrEmpty(myCurrentModel))
             {
-                var oldDir = mogreWin.camera.Direction;
-                var oldPos = mogreWin.camera.Position;
-
-                SetMeshModel(myCurrentModel);
-
-                mogreWin.camera.Direction = oldDir;
-                mogreWin.camera.Position = oldPos;
+                SetMeshModel(myCurrentModel, true);
             }
         }
 
@@ -414,6 +423,27 @@ namespace Mogre.Demo.MogreForm
 
             menuStrip1.Show();
         }
+
+        private void browserToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
+        {
+            if (browserToolStripMenuItem.Checked)
+            {
+                myBrowser.Show(this);
+                if(!string.IsNullOrEmpty(myCurrentModel))
+                    myBrowser.SelectNodeForPath(myCurrentModel);
+            }
+            else
+            {
+                myBrowser.Hide();
+            }
+        }
+
+        public void HideBrowser()
+        {
+            myBrowser.Hide(); // double hide ?
+            browserToolStripMenuItem.Checked = false;
+        }
+                
     }
 }
 

@@ -48,7 +48,6 @@ namespace Mogre.Demo.MogreForm
 
         public Vector3 ModelCenterPosition { get; private set; }
 
-
         SceneNode mainGrid;
 
         private bool HasModelEntity

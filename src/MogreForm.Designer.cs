@@ -34,7 +34,10 @@ namespace Mogre.Demo.MogreForm
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveScreenshotToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
+            this.browserToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.wardrobeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.reloadAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -55,7 +58,6 @@ namespace Mogre.Demo.MogreForm
             this.trackBarAnimPosition = new System.Windows.Forms.TrackBar();
             this.timerRender = new System.Windows.Forms.Timer(this.components);
             this.buttonReload = new System.Windows.Forms.Button();
-            this.saveScreenshotToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarRotateSpeed)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarAnimPosition)).BeginInit();
@@ -89,6 +91,8 @@ namespace Mogre.Demo.MogreForm
             this.openToolStripMenuItem,
             this.saveScreenshotToolStripMenuItem,
             this.toolStripMenuItem1,
+            this.browserToolStripMenuItem,
+            this.toolStripMenuItem3,
             this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(35, 20);
@@ -101,10 +105,30 @@ namespace Mogre.Demo.MogreForm
             this.openToolStripMenuItem.Text = "Open...";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
+            // saveScreenshotToolStripMenuItem
+            // 
+            this.saveScreenshotToolStripMenuItem.Name = "saveScreenshotToolStripMenuItem";
+            this.saveScreenshotToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
+            this.saveScreenshotToolStripMenuItem.Text = "Save Screenshot";
+            this.saveScreenshotToolStripMenuItem.Click += new System.EventHandler(this.saveScreenshotToolStripMenuItem_Click);
+            // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
             this.toolStripMenuItem1.Size = new System.Drawing.Size(163, 6);
+            // 
+            // browserToolStripMenuItem
+            // 
+            this.browserToolStripMenuItem.CheckOnClick = true;
+            this.browserToolStripMenuItem.Name = "browserToolStripMenuItem";
+            this.browserToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
+            this.browserToolStripMenuItem.Text = "Browser";
+            this.browserToolStripMenuItem.CheckedChanged += new System.EventHandler(this.browserToolStripMenuItem_CheckedChanged);
+            // 
+            // toolStripMenuItem3
+            // 
+            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(163, 6);
             // 
             // exitToolStripMenuItem
             // 
@@ -131,54 +155,54 @@ namespace Mogre.Demo.MogreForm
             // reloadAllToolStripMenuItem
             // 
             this.reloadAllToolStripMenuItem.Name = "reloadAllToolStripMenuItem";
-            this.reloadAllToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.reloadAllToolStripMenuItem.Text = "Reload all";
+            this.reloadAllToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
+            this.reloadAllToolStripMenuItem.Text = "Reload all textures";
             this.reloadAllToolStripMenuItem.Click += new System.EventHandler(this.reloadAllToolStripMenuItem_Click);
             // 
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(149, 6);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(172, 6);
             // 
             // faceBodyToolStripMenuItem
             // 
             this.faceBodyToolStripMenuItem.Name = "faceBodyToolStripMenuItem";
-            this.faceBodyToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.faceBodyToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
             this.faceBodyToolStripMenuItem.Text = "Face/Body...";
             this.faceBodyToolStripMenuItem.Click += new System.EventHandler(this.faceBodyToolStripMenuItem_Click);
             // 
             // bootsToolStripMenuItem
             // 
             this.bootsToolStripMenuItem.Name = "bootsToolStripMenuItem";
-            this.bootsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.bootsToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
             this.bootsToolStripMenuItem.Text = "Boots...";
             this.bootsToolStripMenuItem.Click += new System.EventHandler(this.bootsToolStripMenuItem_Click);
             // 
             // chestToolStripMenuItem
             // 
             this.chestToolStripMenuItem.Name = "chestToolStripMenuItem";
-            this.chestToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.chestToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
             this.chestToolStripMenuItem.Text = "Chest...";
             this.chestToolStripMenuItem.Click += new System.EventHandler(this.chestToolStripMenuItem_Click);
             // 
             // glovesToolStripMenuItem
             // 
             this.glovesToolStripMenuItem.Name = "glovesToolStripMenuItem";
-            this.glovesToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.glovesToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
             this.glovesToolStripMenuItem.Text = "Gloves...";
             this.glovesToolStripMenuItem.Click += new System.EventHandler(this.glovesToolStripMenuItem_Click);
             // 
             // helmToolStripMenuItem
             // 
             this.helmToolStripMenuItem.Name = "helmToolStripMenuItem";
-            this.helmToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.helmToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
             this.helmToolStripMenuItem.Text = "Helmet...";
             this.helmToolStripMenuItem.Click += new System.EventHandler(this.helmToolStripMenuItem_Click);
             // 
             // shouldersToolStripMenuItem
             // 
             this.shouldersToolStripMenuItem.Name = "shouldersToolStripMenuItem";
-            this.shouldersToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.shouldersToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
             this.shouldersToolStripMenuItem.Text = "Shoulders...";
             this.shouldersToolStripMenuItem.Click += new System.EventHandler(this.shouldersToolStripMenuItem_Click);
             // 
@@ -288,13 +312,6 @@ namespace Mogre.Demo.MogreForm
             this.buttonReload.UseVisualStyleBackColor = true;
             this.buttonReload.Click += new System.EventHandler(this.buttonReload_Click);
             // 
-            // saveScreenshotToolStripMenuItem
-            // 
-            this.saveScreenshotToolStripMenuItem.Name = "saveScreenshotToolStripMenuItem";
-            this.saveScreenshotToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
-            this.saveScreenshotToolStripMenuItem.Text = "Save Screenshot";
-            this.saveScreenshotToolStripMenuItem.Click += new System.EventHandler(this.saveScreenshotToolStripMenuItem_Click);
-            // 
             // MogreForm
             // 
             this.AllowDrop = true;
@@ -355,6 +372,8 @@ namespace Mogre.Demo.MogreForm
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
         private System.Windows.Forms.ToolStripMenuItem reloadAllToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveScreenshotToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem browserToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem3;
 
     }
 }
