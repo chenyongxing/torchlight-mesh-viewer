@@ -77,6 +77,7 @@ namespace Mogre.Demo.MogreForm
 
             try
             {
+                //parentNode.Nodes.Clear();
                 DirectoryInfo rootDir;
 
                 // To fill Desktop

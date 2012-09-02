@@ -410,6 +410,7 @@ namespace Mogre.Demo.MogreForm
         {
             string res = null;
             menuStrip1.Hide();
+            myBrowser.Hide();
             if (!string.IsNullOrEmpty(myCurrentModel))
             {
                 string nameNoExt = Path.GetFileNameWithoutExtension(myCurrentModel);
@@ -422,15 +423,14 @@ namespace Mogre.Demo.MogreForm
             if (res == null) MessageBox.Show("No model loaded.");
 
             menuStrip1.Show();
+            ShowBrowser();
         }
 
         private void browserToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
         {
             if (browserToolStripMenuItem.Checked)
             {
-                myBrowser.Show(this);
-                if(!string.IsNullOrEmpty(myCurrentModel))
-                    myBrowser.SelectNodeForPath(myCurrentModel);
+                ShowBrowser();
             }
             else
             {
@@ -442,6 +442,13 @@ namespace Mogre.Demo.MogreForm
         {
             myBrowser.Hide(); // double hide ?
             browserToolStripMenuItem.Checked = false;
+        }
+
+        private void ShowBrowser()
+        {
+            myBrowser.Show(this);
+            if (!string.IsNullOrEmpty(myCurrentModel))
+                myBrowser.SelectNodeForPath(myCurrentModel);
         }
                 
     }

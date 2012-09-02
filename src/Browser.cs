@@ -28,6 +28,10 @@ namespace Mogre.Demo.MogreForm
 
         public void SelectNodeForPath(string thePath)
         {
+            // need to clear and re-create the tree, otherwise it will duplicate nodes
+            treeViewBrowser.Nodes.Clear();
+            fe.CreateTree(this.treeViewBrowser);
+
             // extract whole path
             var pathNodes = thePath.Split(Path.DirectorySeparatorChar);
             string fileNode = pathNodes[pathNodes.Length - 1];
