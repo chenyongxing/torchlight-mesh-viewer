@@ -10,6 +10,13 @@ using System.IO;
 
 namespace Mogre.Demo.MogreForm
 {
+    public enum EquipWeaponSlot : int
+    {
+        tag_righthand = 0,
+        tag_lefthand = 1,
+        tag_leftarm = 2
+    }
+
     public enum Wardrobe : int
     {
         Face = 0,
@@ -46,6 +53,8 @@ namespace Mogre.Demo.MogreForm
         private SceneNode ModelSceneNode { get; set; }
         private Entity ModelEntity { get; set; }
 
+        public Entity[] EquipEntities { get; private set; }
+
         public Vector3 ModelCenterPosition { get; private set; }
 
         SceneNode mainGrid;
@@ -74,6 +83,7 @@ namespace Mogre.Demo.MogreForm
             windowSize = theWindowSize;
             this.hWnd = hWnd;
 
+            EquipEntities = new Entity[Enum.GetValues(typeof(EquipWeaponSlot)).Length];
             AutoRotateSpeed = 2f;
         }
 
@@ -376,6 +386,7 @@ namespace Mogre.Demo.MogreForm
                     {
                     }
                 }
+                //ModelEntity.DisplaySkeleton = true;
             }
 
             SetInitialCamera(ModelEntity, ModelSceneNode);
@@ -393,6 +404,86 @@ namespace Mogre.Demo.MogreForm
             return GetAnimationNames(ModelEntity);
         }
 
+        public void SetEquipModel(string theModel, EquipWeaponSlot theSlot)
+        {
+            if (ModelEntity!=null && ModelEntity.HasSkeleton)
+            {
+                string boneName = theSlot.ToString();
+
+                string nameOnly = "Equip" + Path.GetFileNameWithoutExtension(theModel);
+                string filename = Path.GetFileName(theModel);
+                string modelDir = Path.GetDirectoryName(theModel);
+
+                AddResourcesDirectory(nameOnly, modelDir);
+
+                //Entity ent = null;
+                if (sceneMgr.HasEntity(nameOnly))
+                {
+                    sceneMgr.DestroyEntity(nameOnly);
+                }
+                
+                var EquipedModel = sceneMgr.CreateEntity(nameOnly, filename, nameOnly);
+                if (EquipEntities[(int)theSlot] != null)
+                {
+                    ModelEntity.DetachObjectFromBone(EquipEntities[(int)theSlot]);
+                    // TODO: destroy
+                    EquipEntities[(int)theSlot] = null;
+                }
+
+                EquipEntities[(int)theSlot] = EquipedModel;
+
+                ModelEntity.AttachObjectToBone(boneName, EquipedModel);
+                //ModelEntity.Skeleton.GetBone(boneName).
+
+                // check for material textures
+                foreach (var subMesh in EquipedModel.GetMesh().GetSubMeshIterator())
+                {
+                    bool needsReload = false;
+                    var matPtr = (MaterialPtr)MaterialManager.Singleton.GetByName(subMesh.MaterialName);
+                    if (matPtr != null)
+                    {
+                        foreach (var mtrPass in matPtr.GetTechnique(0).GetPassIterator())
+                        {
+                            foreach (var mtrTex in mtrPass.GetTextureUnitStateIterator())
+                            {
+                                if (mtrTex.IsTextureLoadFailing)
+                                {
+                                    mtrTex.SetTextureName(mtrTex.TextureName.Replace(".png", ".dds"));
+                                    needsReload = true;
+                                }
+                            }
+                        }
+                    }
+                    if (needsReload) matPtr.Reload();
+                }
+            }
+        }
+
+        public bool HasWeaponSlot(EquipWeaponSlot theEqSlot)
+        {
+            if (ModelEntity != null && ModelEntity.HasSkeleton)
+            {
+                if(ModelEntity.Skeleton.HasBone(theEqSlot.ToString())) return true;
+                else return false;
+            }
+            else return false;
+        }
+
+        public void UnequipAll()
+        {
+            if (ModelEntity != null && ModelEntity.HasSkeleton)
+            {
+                foreach (EquipWeaponSlot eqSlot in Enum.GetValues(typeof(EquipWeaponSlot)))
+                {
+                    if (EquipEntities[(int)eqSlot] != null)
+                    {
+                        ModelEntity.DetachObjectFromBone(EquipEntities[(int)eqSlot]);
+                        EquipEntities[(int)eqSlot] = null;
+                    }
+                }
+            }
+        }
+        
         public List<string> GetAnimationNames(Entity theEntity)
         {
             List<string> list = new List<string>();

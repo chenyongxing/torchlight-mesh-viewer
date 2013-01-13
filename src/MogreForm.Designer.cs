@@ -48,6 +48,10 @@ namespace Mogre.Demo.MogreForm
             this.glovesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helmToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.shouldersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.equipToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.unequipAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripSeparator();
+            this.toLeftHandToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.infoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.buttonReset = new System.Windows.Forms.Button();
@@ -58,6 +62,10 @@ namespace Mogre.Demo.MogreForm
             this.trackBarAnimPosition = new System.Windows.Forms.TrackBar();
             this.timerRender = new System.Windows.Forms.Timer(this.components);
             this.buttonReload = new System.Windows.Forms.Button();
+            this.toRightHandToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toLeftArmToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.reloadAllEquipsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripSeparator();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarRotateSpeed)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarAnimPosition)).BeginInit();
@@ -78,6 +86,7 @@ namespace Mogre.Demo.MogreForm
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
             this.wardrobeToolStripMenuItem,
+            this.equipToolStripMenuItem,
             this.aboutToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
@@ -206,6 +215,39 @@ namespace Mogre.Demo.MogreForm
             this.shouldersToolStripMenuItem.Text = "Shoulders...";
             this.shouldersToolStripMenuItem.Click += new System.EventHandler(this.shouldersToolStripMenuItem_Click);
             // 
+            // equipToolStripMenuItem
+            // 
+            this.equipToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.reloadAllEquipsToolStripMenuItem,
+            this.toolStripMenuItem5,
+            this.toLeftHandToolStripMenuItem,
+            this.toRightHandToolStripMenuItem,
+            this.toLeftArmToolStripMenuItem,
+            this.toolStripMenuItem4,
+            this.unequipAllToolStripMenuItem});
+            this.equipToolStripMenuItem.Name = "equipToolStripMenuItem";
+            this.equipToolStripMenuItem.Size = new System.Drawing.Size(45, 20);
+            this.equipToolStripMenuItem.Text = "Equip";
+            // 
+            // unequipAllToolStripMenuItem
+            // 
+            this.unequipAllToolStripMenuItem.Name = "unequipAllToolStripMenuItem";
+            this.unequipAllToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
+            this.unequipAllToolStripMenuItem.Text = "Unequip all";
+            this.unequipAllToolStripMenuItem.Click += new System.EventHandler(this.unequipAllToolStripMenuItem_Click);
+            // 
+            // toolStripMenuItem4
+            // 
+            this.toolStripMenuItem4.Name = "toolStripMenuItem4";
+            this.toolStripMenuItem4.Size = new System.Drawing.Size(162, 6);
+            // 
+            // toLeftHandToolStripMenuItem
+            // 
+            this.toLeftHandToolStripMenuItem.Name = "toLeftHandToolStripMenuItem";
+            this.toLeftHandToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
+            this.toLeftHandToolStripMenuItem.Text = "to Left Hand...";
+            this.toLeftHandToolStripMenuItem.Click += new System.EventHandler(this.toLeftHandToolStripMenuItem_Click);
+            // 
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -312,6 +354,32 @@ namespace Mogre.Demo.MogreForm
             this.buttonReload.UseVisualStyleBackColor = true;
             this.buttonReload.Click += new System.EventHandler(this.buttonReload_Click);
             // 
+            // toRightHandToolStripMenuItem
+            // 
+            this.toRightHandToolStripMenuItem.Name = "toRightHandToolStripMenuItem";
+            this.toRightHandToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
+            this.toRightHandToolStripMenuItem.Text = "to Right Hand...";
+            this.toRightHandToolStripMenuItem.Click += new System.EventHandler(this.toRightHandToolStripMenuItem_Click);
+            // 
+            // toLeftArmToolStripMenuItem
+            // 
+            this.toLeftArmToolStripMenuItem.Name = "toLeftArmToolStripMenuItem";
+            this.toLeftArmToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
+            this.toLeftArmToolStripMenuItem.Text = "to Left Arm...";
+            this.toLeftArmToolStripMenuItem.Click += new System.EventHandler(this.toLeftArmToolStripMenuItem_Click);
+            // 
+            // reloadAllEquipsToolStripMenuItem
+            // 
+            this.reloadAllEquipsToolStripMenuItem.Name = "reloadAllEquipsToolStripMenuItem";
+            this.reloadAllEquipsToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
+            this.reloadAllEquipsToolStripMenuItem.Text = "Reload all equips";
+            this.reloadAllEquipsToolStripMenuItem.Click += new System.EventHandler(this.reloadAllEquipsToolStripMenuItem_Click);
+            // 
+            // toolStripMenuItem5
+            // 
+            this.toolStripMenuItem5.Name = "toolStripMenuItem5";
+            this.toolStripMenuItem5.Size = new System.Drawing.Size(162, 6);
+            // 
             // MogreForm
             // 
             this.AllowDrop = true;
@@ -374,6 +442,14 @@ namespace Mogre.Demo.MogreForm
         private System.Windows.Forms.ToolStripMenuItem saveScreenshotToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem browserToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem3;
+        private System.Windows.Forms.ToolStripMenuItem equipToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem toLeftHandToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem unequipAllToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem4;
+        private System.Windows.Forms.ToolStripMenuItem toRightHandToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem toLeftArmToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem reloadAllEquipsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem5;
 
     }
 }

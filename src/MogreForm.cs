@@ -15,7 +15,11 @@ namespace Mogre.Demo.MogreForm
         protected OgreWindow mogreWin;
         CustomInputHandler inputHandler;
 
+        Dictionary<EquipWeaponSlot, string> EquipSlotTagToName;
+
         string myCurrentModel;
+        string[] myEquips;
+
         bool myIsPlaying = false;
 
         Browser myBrowser = null;
@@ -40,6 +44,9 @@ namespace Mogre.Demo.MogreForm
             trackBarRotateSpeed.Visible = false;
             trackBarRotateSpeed.Value = 20;
 
+            wardrobeToolStripMenuItem.Enabled = false;
+            equipToolStripMenuItem.Enabled = false;
+
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer, true);
 
             mogreWin = new OgreWindow(
@@ -51,6 +58,13 @@ namespace Mogre.Demo.MogreForm
             timerRender.Start();
 
             inputHandler = new CustomInputHandler(mogrePanel, this, mogreWin.camera);
+
+            EquipSlotTagToName = new Dictionary<EquipWeaponSlot, string>();
+            EquipSlotTagToName[EquipWeaponSlot.tag_leftarm] = "Left Arm";
+            EquipSlotTagToName[EquipWeaponSlot.tag_lefthand] = "Left Hand";
+            EquipSlotTagToName[EquipWeaponSlot.tag_righthand] = "Right Hand";
+
+            myEquips = new string[Enum.GetValues(typeof(EquipWeaponSlot)).Length];
 
             AddMessageFilter(this.Handle);
 
@@ -115,18 +129,13 @@ namespace Mogre.Demo.MogreForm
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // Displays an OpenFileDialog so the user can select a image.
-            OpenFileDialog openFileDialog1 = new OpenFileDialog();
-            openFileDialog1.Filter = "Mesh file (*.mesh)|*.mesh|All files (*.*)|*.*";
-            openFileDialog1.Title = "Select a mesh";
-            openFileDialog1.RestoreDirectory = true;
-            openFileDialog1.Multiselect = false;
+            var eqModel = GetModelDialog();
 
-            // Show the Dialog.            
-            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            if (!string.IsNullOrEmpty(eqModel))
             {
-                SetMeshModel(openFileDialog1.FileName, false);                
+                SetMeshModel(eqModel, false);  
             }
+            
             this.Refresh();
         }
 
@@ -135,7 +144,9 @@ namespace Mogre.Demo.MogreForm
             try
             {
                 var oldDir = mogreWin.camera.Direction;
-                var oldPos = mogreWin.camera.Position;                
+                var oldPos = mogreWin.camera.Position;
+
+                UnEquip();
 
                 myCurrentModel = theMesh;
                 var anims = mogreWin.SetViewModel(theMesh);
@@ -143,13 +154,13 @@ namespace Mogre.Demo.MogreForm
 
                 this.Text = string.Format("{0} {1} ({2})", AsmInfo.Title, AsmInfo.Version, theMesh);
 
+                listBoxAnimations.Items.Clear();
                 if (anims.Count > 0)
                 {
                     listBoxAnimations.Visible = true;
                     buttonPlayStop.Visible = true;
                     trackBarAnimPosition.Visible = true;
-
-                    listBoxAnimations.Items.Clear();
+                                        
                     foreach (var an in anims)
                     {
                         listBoxAnimations.Items.Add(an);
@@ -166,6 +177,22 @@ namespace Mogre.Demo.MogreForm
 
                 if (theMesh != myBrowser.SelectedModel && myBrowser.Visible)
                     myBrowser.SelectNodeForPath(theMesh);
+
+                // equip stuff
+                toLeftArmToolStripMenuItem.Enabled = false;
+                toLeftHandToolStripMenuItem.Enabled = false;
+                toRightHandToolStripMenuItem.Enabled = false;
+                equipToolStripMenuItem.Enabled = false;
+                if (mogreWin.HasWeaponSlot(EquipWeaponSlot.tag_leftarm))                
+                    toLeftArmToolStripMenuItem.Enabled = true;
+                if (mogreWin.HasWeaponSlot(EquipWeaponSlot.tag_lefthand))
+                    toLeftHandToolStripMenuItem.Enabled = true;
+                if (mogreWin.HasWeaponSlot(EquipWeaponSlot.tag_righthand))
+                    toRightHandToolStripMenuItem.Enabled = true;
+                if(toRightHandToolStripMenuItem.Enabled || toLeftHandToolStripMenuItem.Enabled ||
+                    toLeftArmToolStripMenuItem.Enabled)
+                    equipToolStripMenuItem.Enabled = true;
+
             }
             catch (Exception e)
             {
@@ -190,6 +217,23 @@ namespace Mogre.Demo.MogreForm
                 }
             }
             
+        }
+
+        private void CheckEquips()
+        {
+            foreach (EquipWeaponSlot suit in Enum.GetValues(typeof(EquipWeaponSlot)))
+            {
+                foreach (var it in equipToolStripMenuItem.DropDownItems)
+                {
+                    string equipStr = EquipSlotTagToName[suit];
+                    var toolItem = (ToolStripItem)it;
+                    if (toolItem.Text.IndexOf(equipStr, StringComparison.OrdinalIgnoreCase) >= 0)
+                    {
+                        toolItem.Text = string.Format("{0}({1})...", equipStr,
+                            Path.GetFileName(myEquips[(int)suit]));
+                    }
+                }
+            }
         }
                 
         private void MogreForm_DragEnter(object sender, DragEventArgs e)
@@ -450,7 +494,96 @@ namespace Mogre.Demo.MogreForm
             if (!string.IsNullOrEmpty(myCurrentModel))
                 myBrowser.SelectNodeForPath(myCurrentModel);
         }
-                
+
+        //private void ReloadEquips()
+        //{
+        //}
+
+        private string GetModelDialog()
+        {
+            // Displays an OpenFileDialog so the user can select a image.
+            OpenFileDialog openFileDialog1 = new OpenFileDialog();
+            openFileDialog1.Filter = "Mesh file (*.mesh)|*.mesh|All files (*.*)|*.*";
+            openFileDialog1.Title = "Select a mesh";
+            openFileDialog1.RestoreDirectory = true;
+            openFileDialog1.Multiselect = false;
+
+            // Show the Dialog.            
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                return openFileDialog1.FileName;
+            }
+            return string.Empty;
+        }
+
+        private void unequipAllToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            UnEquip();
+        }
+
+        private void UnEquip()
+        {
+            if (!string.IsNullOrEmpty(myCurrentModel))
+            {
+                mogreWin.UnequipAll();
+            }
+            foreach (EquipWeaponSlot eq in Enum.GetValues(typeof(EquipWeaponSlot)))
+            {
+                myEquips[(int)eq] = string.Empty;
+            }
+            CheckEquips();
+        }
+
+        private void SetEquipModel(string theModel, EquipWeaponSlot theSlot)
+        {
+            if (!string.IsNullOrEmpty(theModel))
+            {
+                mogreWin.SetEquipModel(theModel, theSlot);
+            }
+            this.Refresh();
+            myEquips[(int)theSlot] = theModel;
+            CheckEquips();
+            // TODO: need this to force update of bone position/orient so that
+            // attached objects get updated to current pose (not the bind pose)
+            mogreWin.SetActiveAnimationTimePos(((float)this.trackBarAnimPosition.Value) / 100f + 0.001f);
+            mogreWin.SetActiveAnimationTimePos(((float)this.trackBarAnimPosition.Value) / 100f);
+        }
+
+        private void toLeftHandToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(myCurrentModel))
+            {
+                SetEquipModel(GetModelDialog(), EquipWeaponSlot.tag_lefthand);
+            }
+        }
+
+        private void toRightHandToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(myCurrentModel))
+            {
+                SetEquipModel(GetModelDialog(), EquipWeaponSlot.tag_righthand);
+            }
+        }
+
+        private void toLeftArmToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(myCurrentModel))
+            {
+                SetEquipModel(GetModelDialog(), EquipWeaponSlot.tag_leftarm);
+            }
+        }
+
+        private void reloadAllEquipsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(myCurrentModel))
+            {
+                foreach (EquipWeaponSlot eq in Enum.GetValues(typeof(EquipWeaponSlot)))
+                {
+                    if(!string.IsNullOrEmpty(myEquips[(int)eq]))
+                        SetEquipModel(myEquips[(int)eq], eq);
+                }
+            }
+        }
     }
 }
 
