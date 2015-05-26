@@ -1,4 +1,5 @@
 # torchlight-mesh-viewer
+Automatically exported from code.google.com/p/torchlight-to-blender
 # Can do: #
   * view Torchlight mesh models
   * load animations parsed in folder and preview them
